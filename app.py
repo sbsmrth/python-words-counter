@@ -1,41 +1,48 @@
 import os
+import re
 
 class ContadorPalabras:
     def __init__(self, carpeta, palabra):
         self.carpeta = carpeta
         self.palabra = palabra
+        self.resultados = {}
 
-    def contar_en_archivo(self, archivo):
+    def contar_palabra(self):
         try:
-            with open(archivo, 'r') as file:
-                contenido = file.read()
-                veces = contenido.count(self.palabra)
-                print(f"{archivo}: {veces} veces")
-                return veces
+            archivos_txt = [archivo for archivo in os.listdir(self.carpeta) if archivo.endswith('.txt')]
+            if not archivos_txt:
+                return 0
+            
+            total_palabras = 0
+            
+            for archivo in archivos_txt:
+                ruta_archivo = os.path.join(self.carpeta, archivo)
+                with open(ruta_archivo, 'r') as file:
+                    contenido = file.read()
+                    contador = len(re.findall(r'\b{}\b'.format(re.escape(self.palabra)), contenido))
+                    self.resultados[archivo] = contador
+                    total_palabras += contador
+            
+            return total_palabras
+        
         except FileNotFoundError:
-            print(f"Error: No se pudo abrir el archivo {archivo}")
+            print("No se encuentra la carpeta indicada.")
             return 0
 
-    def contar_en_carpeta(self):
-        if not os.path.exists(self.carpeta):
-            print("Error: La carpeta indicada no existe.")
-            return
-
-        total_veces = 0
-        for archivo in os.listdir(self.carpeta):
-            if archivo.endswith(".txt"):
-                archivo_path = os.path.join(self.carpeta, archivo)
-                total_veces += self.contar_en_archivo(archivo_path)
-
-        if total_veces == 0:
-            print("No se encontraron archivos de texto en la carpeta.")
+    def mostrar_resultados(self):
+        if self.resultados:
+            print("Resultados:")
+            for archivo, contador in self.resultados.items():
+                print(f"{archivo}: {contador} veces")
+            print(f"Total: {sum(self.resultados.values())} veces")
         else:
-            print(f"Total: {total_veces} veces")
-
+            print("No se encontraron archivos de texto en la carpeta.")
 
 if __name__ == "__main__":
     carpeta = input("Ingrese la ruta completa de la carpeta: ")
     palabra = input("Ingrese la palabra que desea buscar: ")
 
     contador = ContadorPalabras(carpeta, palabra)
-    contador.contar_en_carpeta()
+    total = contador.contar_palabra()
+    contador.mostrar_resultados()
+
