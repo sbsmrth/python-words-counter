@@ -1,48 +1,66 @@
 import os
 import re
+import sys
 
-class ContadorPalabras:
-    def __init__(self, carpeta, palabra):
-        self.carpeta = carpeta
-        self.palabra = palabra
-        self.resultados = {}
+class ArchivoTexto:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.contenido = ""
 
-    def contar_palabra(self):
+    def leer_contenido(self):
         try:
-            archivos_txt = [archivo for archivo in os.listdir(self.carpeta) if archivo.endswith('.txt')]
-            if not archivos_txt:
-                return 0
-            
-            total_palabras = 0
-            
-            for archivo in archivos_txt:
-                ruta_archivo = os.path.join(self.carpeta, archivo)
-                with open(ruta_archivo, 'r') as file:
-                    contenido = file.read()
-                    contador = len(re.findall(r'\b{}\b'.format(re.escape(self.palabra)), contenido))
-                    self.resultados[archivo] = contador
-                    total_palabras += contador
-            
-            return total_palabras
-        
+            with open(self.nombre, 'r') as file:
+                self.contenido = file.read()
         except FileNotFoundError:
-            print("No se encuentra la carpeta indicada.")
-            return 0
+            print(f"El archivo {self.nombre} no se encuentra.")
+            self.contenido = ""
 
-    def mostrar_resultados(self):
-        if self.resultados:
-            print("Resultados:")
-            for archivo, contador in self.resultados.items():
-                print(f"{archivo}: {contador} veces")
-            print(f"Total: {sum(self.resultados.values())} veces")
-        else:
+    def contar_palabra(self, palabra):
+        return len(re.findall(r'\b{}\b'.format(re.escape(palabra)), self.contenido))
+
+class CarpetaArchivos:
+    def __init__(self, ruta):
+        self.ruta = ruta
+        self.archivos = []
+
+    def listar_archivos_txt(self):
+        try:
+            for archivo in os.listdir(self.ruta):
+                if archivo.endswith('.txt'):
+                    self.archivos.append(ArchivoTexto(os.path.join(self.ruta, archivo)))
+        except FileNotFoundError:
+            print(f"No se encontró la carpeta {self.ruta}.")
+            sys.exit()
+
+    def contar_palabra_en_archivos(self, palabra):
+        total_palabras = 0
+        for archivo in self.archivos:
+            archivo.leer_contenido()
+            total_palabras += archivo.contar_palabra(palabra)
+        return total_palabras
+
+class AnalizadorArchivos:
+    def __init__(self, carpeta):
+        self.carpeta = CarpetaArchivos(carpeta)
+
+    def analizar(self, palabra):
+        self.carpeta.listar_archivos_txt()
+        total_palabras = self.carpeta.contar_palabra_en_archivos(palabra)
+        self.mostrar_resultados(total_palabras)
+
+    def mostrar_resultados(self, total):
+        print("Resultados:")
+        for archivo in self.carpeta.archivos:
+            print(f"{archivo.nombre}: {archivo.contar_palabra(palabra)} veces")
+        
+        if len(self.carpeta.archivos) == 0:
             print("No se encontraron archivos de texto en la carpeta.")
+
+        print(f"Total: {total} veces")
 
 if __name__ == "__main__":
     carpeta = input("Ingrese la ruta completa de la carpeta: ")
     palabra = input("Ingrese la palabra que desea buscar: ")
 
-    contador = ContadorPalabras(carpeta, palabra)
-    total = contador.contar_palabra()
-    contador.mostrar_resultados()
-
+    analizador = AnalizadorArchivos(carpeta)
+    analizador.analizar(palabra)
