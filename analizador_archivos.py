@@ -1,9 +1,11 @@
 from carpeta_archivos import CarpetaArchivos
 
+
 class AnalizadorArchivos:
     """
     Clase para analizar archivos de texto en una carpeta dada en busca de una palabra específica.
     """
+
     def __init__(self, carpeta):
         """
         Inicializa un nuevo analizador de archivos con la carpeta dada.
@@ -20,7 +22,7 @@ class AnalizadorArchivos:
         Args:
             palabra (str): La palabra que se desea buscar.
         """
-        self.carpeta.listar_archivos_txt()
+        self.carpeta.listar_archivos()
         total_palabras = self.carpeta.contar_palabra_en_archivos(palabra)
         self.mostrar_resultados(total_palabras, palabra)
 

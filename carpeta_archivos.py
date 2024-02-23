@@ -1,12 +1,12 @@
 import os
 import sys
 from elemento_archivo import ElementoArchivo
-from archivo_texto import ArchivoTexto
 
 class CarpetaArchivos(ElementoArchivo):
     """
     Clase para representar una carpeta que contiene archivos de texto y realizar operaciones en ellos.
     """
+
     def __init__(self, ruta):
         """
         Inicializa una nueva carpeta de archivos con la ruta dada.
@@ -17,17 +17,18 @@ class CarpetaArchivos(ElementoArchivo):
         super().__init__(ruta)
         self.archivos = []
 
-    def listar_archivos_txt(self):
+    def listar_archivos(self):
         """
-        Lista los archivos de texto en la carpeta y los almacena en la lista 'archivos'.
-        Muestra un mensaje si no se encuentran archivos de texto en la carpeta.
+        Lista los archivos en la carpeta y los almacena en la lista 'archivos'.
         """
         try:
             for archivo in os.listdir(self.nombre):
-                if archivo.endswith('.txt'):
-                    self.archivos.append(ArchivoTexto(os.path.join(self.nombre, archivo)))
+                if archivo.endswith((".txt", ".xml", ".json", ".csv")):
+                    self.archivos.append(
+                        ElementoArchivo(os.path.join(self.nombre, archivo))
+                    )
             if not self.archivos:
-                print("No se encontraron archivos de texto en la carpeta.")
+                print("No se encontraron archivos txt, xml, json, csv en la carpeta.")
                 sys.exit()
         except FileNotFoundError:
             print(f"No se encontró la carpeta {self.nombre}.")
