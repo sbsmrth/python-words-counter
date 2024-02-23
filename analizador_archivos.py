@@ -3,7 +3,7 @@ from carpeta_archivos import CarpetaArchivos
 
 class AnalizadorArchivos:
     """
-    Clase para analizar archivos de texto en una carpeta dada en busca de una palabra específica.
+    Clase para analizar archivos en una carpeta dada en busca de una palabra específica.
     """
 
     def __init__(self, carpeta):

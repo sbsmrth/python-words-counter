@@ -2,21 +2,21 @@ import re
 
 class ElementoArchivo():
     """
-    Clase para representar un archivo de texto y realizar operaciones en él.
+    Clase para representar un archivo y realizar operaciones en él.
     """
     def __init__(self, nombre):
         """
-        Inicializa un nuevo archivo de texto con el nombre dado.
+        Inicializa un nuevo archivo con el nombre dado.
 
         Args:
-            nombre (str): El nombre del archivo de texto.
+            nombre (str): El nombre del archivo
         """
         self.nombre = nombre
         self.contenido = ""
 
     def leer_contenido(self):
         """
-        Lee el contenido del archivo de texto y lo almacena en el atributo 'contenido'.
+        Lee el contenido del archivo y lo almacena en el atributo 'contenido'.
         """
         try:
             with open(self.nombre, 'r') as file:
@@ -27,12 +27,12 @@ class ElementoArchivo():
 
     def contar_palabra(self, palabra):
         """
-        Cuenta el número de ocurrencias de una palabra en el contenido del archivo de texto.
+        Cuenta el número de ocurrencias de una palabra en el contenido del archivo.
 
         Args:
             palabra (str): La palabra que se desea buscar.
 
         Returns:
-            int: El número de ocurrencias de la palabra en el archivo de texto.
+            int: El número de ocurrencias de la palabra en el archivo.
         """
         return len(re.findall(r'\b{}\b'.format(re.escape(palabra)), self.contenido))

@@ -4,7 +4,7 @@ from elemento_archivo import ElementoArchivo
 
 class CarpetaArchivos(ElementoArchivo):
     """
-    Clase para representar una carpeta que contiene archivos de texto y realizar operaciones en ellos.
+    Clase para representar una carpeta que contiene archivos y realiza operaciones en ellos.
     """
 
     def __init__(self, ruta):
